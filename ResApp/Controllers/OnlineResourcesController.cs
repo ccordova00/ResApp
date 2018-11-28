@@ -10,22 +10,23 @@ using ResApp.Models;
 
 namespace ResApp.Controllers
 {
-    public class EducationsController : Controller
+    public class OnlineResourcesController : Controller
     {
         private readonly ResAppContext _context;
 
-        public EducationsController(ResAppContext context)
+        public OnlineResourcesController(ResAppContext context)
         {
             _context = context;
         }
 
-        // GET: Educations
+        // GET: OnlineResources
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Educations.ToListAsync());
+            var resAppContext = _context.Links.Include(l => l.Applicant);
+            return View(await resAppContext.ToListAsync());
         }
 
-        // GET: Educations/Details/5
+        // GET: OnlineResources/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +34,42 @@ namespace ResApp.Controllers
                 return NotFound();
             }
 
-            var education = await _context.Educations
+            var link = await _context.Links
+                .Include(l => l.Applicant)
                 .SingleOrDefaultAsync(m => m.ID == id);
-            if (education == null)
+            if (link == null)
             {
                 return NotFound();
             }
 
-            return View(education);
+            return View(link);
         }
 
-        // GET: Educations/Create
+        // GET: OnlineResources/Create
         public IActionResult Create()
         {
+            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName");
             return View();
         }
 
-        // POST: Educations/Create
+        // POST: OnlineResources/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Degree,School,GPA,GradDate")] Education education)
+        public async Task<IActionResult> Create([Bind("ID,LinkUrl,Description,ApplicantID")] Link link)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(education);
+                _context.Add(link);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(education);
+            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", link.ApplicantID);
+            return View(link);
         }
 
-        // GET: Educations/Edit/5
+        // GET: OnlineResources/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +77,23 @@ namespace ResApp.Controllers
                 return NotFound();
             }
 
-            var education = await _context.Educations.SingleOrDefaultAsync(m => m.ID == id);
-            if (education == null)
+            var link = await _context.Links.SingleOrDefaultAsync(m => m.ID == id);
+            if (link == null)
             {
                 return NotFound();
             }
-            return View(education);
+            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", link.ApplicantID);
+            return View(link);
         }
 
-        // POST: Educations/Edit/5
+        // POST: OnlineResources/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Degree,School,GPA,GradDate")] Education education)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,LinkUrl,Description,ApplicantID")] Link link)
         {
-            if (id != education.ID)
+            if (id != link.ID)
             {
                 return NotFound();
             }
@@ -97,12 +102,12 @@ namespace ResApp.Controllers
             {
                 try
                 {
-                    _context.Update(education);
+                    _context.Update(link);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EducationExists(education.ID))
+                    if (!LinkExists(link.ID))
                     {
                         return NotFound();
                     }
@@ -113,10 +118,11 @@ namespace ResApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(education);
+            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", link.ApplicantID);
+            return View(link);
         }
 
-        // GET: Educations/Delete/5
+        // GET: OnlineResources/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,30 +130,31 @@ namespace ResApp.Controllers
                 return NotFound();
             }
 
-            var education = await _context.Educations
+            var link = await _context.Links
+                .Include(l => l.Applicant)
                 .SingleOrDefaultAsync(m => m.ID == id);
-            if (education == null)
+            if (link == null)
             {
                 return NotFound();
             }
 
-            return View(education);
+            return View(link);
         }
 
-        // POST: Educations/Delete/5
+        // POST: OnlineResources/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var education = await _context.Educations.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Educations.Remove(education);
+            var link = await _context.Links.SingleOrDefaultAsync(m => m.ID == id);
+            _context.Links.Remove(link);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EducationExists(int id)
+        private bool LinkExists(int id)
         {
-            return _context.Educations.Any(e => e.ID == id);
+            return _context.Links.Any(e => e.ID == id);
         }
     }
 }

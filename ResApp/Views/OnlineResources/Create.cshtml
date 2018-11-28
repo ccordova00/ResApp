@@ -1,4 +1,4 @@
-﻿@model ResApp.Models.Skill
+﻿@model ResApp.Models.Link
 
 @{
     ViewData["Title"] = "Create";
@@ -6,34 +6,25 @@
 
 <h2>Create</h2>
 
-<h4>Skill</h4>
+<h4>Link</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="LinkUrl" class="control-label"></label>
+                <input asp-for="LinkUrl" class="form-control" />
+                <span asp-validation-for="LinkUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="YearsExp" class="control-label"></label>
-                <input asp-for="YearsExp" class="form-control" />
-                <span asp-validation-for="YearsExp" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <input asp-for="Priority" class="form-control" />
-                <span asp-validation-for="Priority" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="ApplicantID" class="control-label"></label>
                 <select asp-for="ApplicantID" class ="form-control" asp-items="ViewBag.ApplicantID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryID" class="control-label"></label>
-                <select asp-for="CategoryID" class ="form-control" asp-items="ViewBag.CategoryID"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

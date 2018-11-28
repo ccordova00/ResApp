@@ -11,8 +11,8 @@ using System;
 namespace ResApp.Migrations
 {
     [DbContext(typeof(ResAppContext))]
-    [Migration("20181124201631_job1")]
-    partial class job1
+    [Migration("20181128172311_new-migration")]
+    partial class newmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

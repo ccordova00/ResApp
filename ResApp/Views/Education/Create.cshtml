@@ -1,4 +1,4 @@
-﻿@model ResApp.Models.Skill
+﻿@model ResApp.Models.Education
 
 @{
     ViewData["Title"] = "Create";
@@ -6,34 +6,35 @@
 
 <h2>Create</h2>
 
-<h4>Skill</h4>
+<h4>Education</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Degree" class="control-label"></label>
+                <input asp-for="Degree" class="form-control" />
+                <span asp-validation-for="Degree" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="YearsExp" class="control-label"></label>
-                <input asp-for="YearsExp" class="form-control" />
-                <span asp-validation-for="YearsExp" class="text-danger"></span>
+                <label asp-for="School" class="control-label"></label>
+                <input asp-for="School" class="form-control" />
+                <span asp-validation-for="School" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <input asp-for="Priority" class="form-control" />
-                <span asp-validation-for="Priority" class="text-danger"></span>
+                <label asp-for="GPA" class="control-label"></label>
+                <input asp-for="GPA" class="form-control" />
+                <span asp-validation-for="GPA" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ApplicantID" class="control-label"></label>
                 <select asp-for="ApplicantID" class ="form-control" asp-items="ViewBag.ApplicantID"></select>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryID" class="control-label"></label>
-                <select asp-for="CategoryID" class ="form-control" asp-items="ViewBag.CategoryID"></select>
+                <label asp-for="GradDate" class="control-label"></label>
+                <input asp-for="GradDate" class="form-control" />
+                <span asp-validation-for="GradDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

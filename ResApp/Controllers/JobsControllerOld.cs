@@ -8,25 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using ResApp.Data;
 using ResApp.Models;
 
-namespace ResApp.Views
+namespace ResApp.Controllers
 {
-    public class SkillsController : Controller
+    public class JobsControllerOld : Controller
     {
         private readonly ResAppContext _context;
 
-        public SkillsController(ResAppContext context)
+        public JobsControllerOld(ResAppContext context)
         {
             _context = context;
         }
 
-        // GET: Skills
+        // GET: Jobs
         public async Task<IActionResult> Index()
         {
-            var resAppContext = _context.Skills.Include(s => s.Applicant).Include(s => s.Category);
-            return View(await resAppContext.ToListAsync());
+            return View(await _context.Jobs.ToListAsync());
         }
 
-        // GET: Skills/Details/5
+        // GET: Jobs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,45 +33,39 @@ namespace ResApp.Views
                 return NotFound();
             }
 
-            var skill = await _context.Skills
-                .Include(s => s.Applicant)
-                .Include(s => s.Category)
+            var job = await _context.Jobs
                 .SingleOrDefaultAsync(m => m.ID == id);
-            if (skill == null)
+            if (job == null)
             {
                 return NotFound();
             }
 
-            return View(skill);
+            return View(job);
         }
 
-        // GET: Skills/Create
+        // GET: Jobs/Create
         public IActionResult Create()
         {
-            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName");
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Description");
             return View();
         }
 
-        // POST: Skills/Create
+        // POST: Jobs/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Description,YearsExp,Priority,ApplicantID,CategoryID")] Skill skill)
+        public async Task<IActionResult> Create([Bind("ID,StartDate,EndDate,Company,Title,Info")] Job job)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(skill);
+                _context.Add(job);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", skill.ApplicantID);
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Description", skill.CategoryID);
-            return View(skill);
+            return View(job);
         }
 
-        // GET: Skills/Edit/5
+        // GET: Jobs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,24 +73,22 @@ namespace ResApp.Views
                 return NotFound();
             }
 
-            var skill = await _context.Skills.SingleOrDefaultAsync(m => m.ID == id);
-            if (skill == null)
+            var job = await _context.Jobs.SingleOrDefaultAsync(m => m.ID == id);
+            if (job == null)
             {
                 return NotFound();
             }
-            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", skill.ApplicantID);
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Description", skill.CategoryID);
-            return View(skill);
+            return View(job);
         }
 
-        // POST: Skills/Edit/5
+        // POST: Jobs/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Description,YearsExp,Priority,ApplicantID,CategoryID")] Skill skill)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,StartDate,EndDate,Company,Title,Info")] Job job)
         {
-            if (id != skill.ID)
+            if (id != job.ID)
             {
                 return NotFound();
             }
@@ -106,12 +97,12 @@ namespace ResApp.Views
             {
                 try
                 {
-                    _context.Update(skill);
+                    _context.Update(job);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SkillExists(skill.ID))
+                    if (!JobExists(job.ID))
                     {
                         return NotFound();
                     }
@@ -122,12 +113,10 @@ namespace ResApp.Views
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", skill.ApplicantID);
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Description", skill.CategoryID);
-            return View(skill);
+            return View(job);
         }
 
-        // GET: Skills/Delete/5
+        // GET: Jobs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,32 +124,30 @@ namespace ResApp.Views
                 return NotFound();
             }
 
-            var skill = await _context.Skills
-                .Include(s => s.Applicant)
-                .Include(s => s.Category)
+            var job = await _context.Jobs
                 .SingleOrDefaultAsync(m => m.ID == id);
-            if (skill == null)
+            if (job == null)
             {
                 return NotFound();
             }
 
-            return View(skill);
+            return View(job);
         }
 
-        // POST: Skills/Delete/5
+        // POST: Jobs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var skill = await _context.Skills.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Skills.Remove(skill);
+            var job = await _context.Jobs.SingleOrDefaultAsync(m => m.ID == id);
+            _context.Jobs.Remove(job);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SkillExists(int id)
+        private bool JobExists(int id)
         {
-            return _context.Skills.Any(e => e.ID == id);
+            return _context.Jobs.Any(e => e.ID == id);
         }
     }
 }

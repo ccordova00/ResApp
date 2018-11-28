@@ -7,6 +7,7 @@ namespace ResApp.Models
 {
     public class Link
     {
+        //For Online Resources section
         public int ID { get; set; }
         public string LinkUrl { get; set; }
         public string Description { get; set; }

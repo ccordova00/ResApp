@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ResApp.Data;
 using ResApp.Models;
 
-namespace ResApp.Controllers
+namespace ResApp.Views
 {
     public class JobsController : Controller
     {
@@ -22,7 +22,8 @@ namespace ResApp.Controllers
         // GET: Jobs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Jobs.ToListAsync());
+            var resAppContext = _context.Jobs.Include(j => j.Applicant);
+            return View(await resAppContext.ToListAsync());
         }
 
         // GET: Jobs/Details/5
@@ -34,6 +35,7 @@ namespace ResApp.Controllers
             }
 
             var job = await _context.Jobs
+                .Include(j => j.Applicant)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (job == null)
             {
@@ -46,6 +48,7 @@ namespace ResApp.Controllers
         // GET: Jobs/Create
         public IActionResult Create()
         {
+            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace ResApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,StartDate,EndDate,Company,Title,Info")] Job job)
+        public async Task<IActionResult> Create([Bind("ID,StartDate,EndDate,Company,Title,Info,ApplicantID")] Job job)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace ResApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", job.ApplicantID);
             return View(job);
         }
 
@@ -78,6 +82,7 @@ namespace ResApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", job.ApplicantID);
             return View(job);
         }
 
@@ -86,7 +91,7 @@ namespace ResApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,StartDate,EndDate,Company,Title,Info")] Job job)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,StartDate,EndDate,Company,Title,Info,ApplicantID")] Job job)
         {
             if (id != job.ID)
             {
@@ -113,6 +118,7 @@ namespace ResApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", job.ApplicantID);
             return View(job);
         }
 
@@ -125,6 +131,7 @@ namespace ResApp.Controllers
             }
 
             var job = await _context.Jobs
+                .Include(j => j.Applicant)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (job == null)
             {

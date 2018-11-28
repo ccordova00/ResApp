@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ResApp.Migrations
 {
-    public partial class job1 : Migration
+    public partial class newmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

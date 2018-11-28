@@ -40,6 +40,12 @@
         <dd>
             @Html.DisplayFor(model => model.Info)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Applicant)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Applicant.FullName)
+        </dd>
     </dl>
 </div>
 <div>

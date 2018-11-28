@@ -4,10 +4,10 @@
     ViewData["Title"] = "Corban Cordova's Resume";
 }
 
-<div class="">
-    <div class="text-left text-md-center mb-4 text-light"><h2>Corban Cordova</h2></div>
+<div class="container">
+    <div class="text-left text-md-center mb-4 "><h2>Corban Cordova</h2></div>
     <div class="card mb-4">
-        <div class="card-title">
+        <div class="card-header">
             <h4>Resume</h4>
         </div>
         <div class="card-body">
@@ -22,12 +22,14 @@
             </div>
             <div>
                 @Html.DisplayFor(x => x.Email)
-            </div><br />
+            </div>
         </div> <!-- card body -->
     </div> <!--card -->
-
-    <div class="card">
-        <div class="card-title"><u>Certifications</u></div>
+    <!-- Certifications -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Certifications
+        </div>
         <div class="card-body">
             @foreach (var item in Model.Certs)
             {
@@ -41,125 +43,145 @@
             }<br />
         </div> <!-- card body -->
     </div> <!--card -->
-    <div><u>Skills</u></div>
 
-    @foreach (var section in (List<Category>)ViewBag.Categories)
-    {
-        <div class="card">
-
-            <div class="card-header">
-                <h4><u>@Html.DisplayFor(modelItem => section.Description)</u></h4>
-            </div>
-            <div class="card-body">
-                @foreach (var item in Model.Skills)
-                {
-                    @if (section.Description == item.Category.Description)
-                    {
-                        <div>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </div>
-                    }
-                }
-            </div><!-- card body -->
-        </div><!-- card -->
-    }
-    <br />
-
-    <div><u>Online Resources</u></div>
-    @foreach (var item in Model.Links)
-    {
-        <div>
-            <a href="@item.LinkUrl">@Html.DisplayFor(modelItem => item.Description)</a>
+    <!-- Online Resources -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Online Resources
         </div>
-    }<br />
-
-    <div><u>Experience</u></div>
-    <table>
-        @foreach (var item in Model.Jobs)
-        {
-            <tr>
-                <td>
-                    <h4><u>@Html.DisplayFor(modelItem => item.Company)</u></h4>
-                    ( @Html.DisplayFor(modelItem => item.StartDate) - @(string.IsNullOrEmpty(item.EndDate.ToString()) ? "Present" : "")
-                    @Html.DisplayFor(modelItem => item.EndDate))
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @item.Title<br />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @item.Info<br />
-                </td>
-            </tr>
-            @foreach (var responsibility in item.Responsibilities)
+        <div class="card-body">
+            @foreach (var item in Model.Links)
             {
-                <tr>
-                    <td>
-                        <ul>
-                            <li>
-                                @responsibility.Description
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
+                <div>
+                    <a href="@item.LinkUrl">@Html.DisplayFor(modelItem => item.Description)</a>
+                </div>
+            }<br />
+        </div> <!-- card body -->
+    </div> <!-- card -->
+
+    <!-- Skills -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Skills
+        </div>
+        <div class="card-body">
+            @foreach (var section in (List<Category>)ViewBag.Categories)
+            {
+                <div class="card mb-2">
+
+                    <div class="card-header">
+                        <h4><u>@Html.DisplayFor(modelItem => section.Description)</u></h4>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var item in Model.Skills)
+                        {
+                            @if (section.Description == item.Category.Description)
+                            {
+                                <div>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </div>
+                            }
+                        }
+                    </div><!-- card body -->
+                </div><!-- card -->
             }
-        }
-    </table>
-    <div><u>Education</u></div>
+        </div> <!-- card body -->
+    </div> <!-- card -->
+    <!-- Experience -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Experience
+        </div>
+        <div class="card-body">
+            @foreach (var item in Model.Jobs)
+            {
+                <div class="card mb-2">
+                    <div class="card-header">
+                        @Html.DisplayFor(modelItem => item.Company) (@Html.DisplayFor(modelItem => item.StartDate) - @(string.IsNullOrEmpty(item.EndDate.ToString()) ? "Present" : "") @Html.DisplayFor(modelItem => item.EndDate))
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">@item.Title</div>
+                        <p>
+                            @item.Info
+                        </p>
+                        <p>
+                            Responsibilities
+                            @foreach (var responsibility in item.Responsibilities)
+                            {
+                                <ul>
+                                    <li>
+                                        @responsibility.Description
+                                    </li>
+                                </ul>
+                            }
+                        </p>
+                    </div> <!-- card body -->
+                </div><!-- card -->
+            }
+        </div> <!--card body -->
+    </div> <!--card  -->
+    <!-- Education -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Education
+        </div>
+        <div class="card-body">
+            @foreach (var item in Model.Educations)
+            {
+                <table>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Degree)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.School)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GradDate)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GPA), GPA
+                        </td>
+                    </tr>
+                    <br />
+                </table>
+            }
+        </div> <!--card body -->
+    </div><!-- card -->
 
+    <div class="card mb-4">
+        <div class="card-header">
+            References
+        </div>
+        <div class="card-body">
 
-    @foreach (var item in Model.Educations)
-    {
-        <table>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Degree)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.School)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GradDate)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GPA), GPA
-                </td>
-            </tr>
-            <br />
-        </table>
-
-    }
-
-    <div><u>References</u></div>
-
-    @foreach (var item in Model.References)
-    {
-        <table>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name), @Html.DisplayFor(modelItem => item.Title)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Company)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
-            </tr>
-        </table>
-        <br />
-    }
+            @foreach (var item in Model.References)
+            {
+                <table>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name), @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Company)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                        </td>
+                    </tr>
+                </table>
+                <br />
+            }
+        </div><!-- card body -->
+    </div><!-- card -->
 </div> <!--container -->

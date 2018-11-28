@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ResApp.Models.Job>
+﻿@model IEnumerable<ResApp.Models.Link>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,19 +13,10 @@
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.StartDate)
+                    @Html.DisplayNameFor(model => model.LinkUrl)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Company)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Info)
+                    @Html.DisplayNameFor(model => model.Description)
                 </th>
             <th>
                 @Html.DisplayNameFor(model => model.Applicant)
@@ -37,19 +28,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
+                @Html.DisplayFor(modelItem => item.LinkUrl)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Company)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Info)
+                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Applicant.FullName)

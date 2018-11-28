@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using ResApp.Data;
 using ResApp.Models;
 
-namespace ResApp.Views
+namespace ResApp.Controllers
 {
-    public class SkillsController : Controller
+    public class SkillsControllerOld : Controller
     {
         private readonly ResAppContext _context;
 
-        public SkillsController(ResAppContext context)
+        public SkillsControllerOld(ResAppContext context)
         {
             _context = context;
         }
@@ -22,8 +22,9 @@ namespace ResApp.Views
         // GET: Skills
         public async Task<IActionResult> Index()
         {
-            var resAppContext = _context.Skills.Include(s => s.Applicant).Include(s => s.Category);
-            return View(await resAppContext.ToListAsync());
+            //var resAppContext = _context.Skills.Include(c => c.Category);
+            //return View(await resAppContext.ToListAsync());
+            return View(await _context.Skills.ToListAsync());
         }
 
         // GET: Skills/Details/5
@@ -35,8 +36,6 @@ namespace ResApp.Views
             }
 
             var skill = await _context.Skills
-                .Include(s => s.Applicant)
-                .Include(s => s.Category)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (skill == null)
             {
@@ -49,8 +48,19 @@ namespace ResApp.Views
         // GET: Skills/Create
         public IActionResult Create()
         {
-            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName");
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Description");
+            var categories = from a in _context.Categories
+                             .OrderBy(a => a.Description)
+                             .ToList()
+                             select a;
+
+            ViewBag.Categories = categories;
+
+            var applicants = from a in _context.Applicants
+                             .OrderBy(a => a.LastName)
+                             .ToList()
+                             select a;
+
+            ViewBag.Applicants = applicants;
             return View();
         }
 
@@ -59,7 +69,7 @@ namespace ResApp.Views
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Description,YearsExp,Priority,ApplicantID,CategoryID")] Skill skill)
+        public async Task<IActionResult> Create([Bind("ApplicantID,Description,YearsExp,Priority,CategoryID")] Skill skill)
         {
             if (ModelState.IsValid)
             {
@@ -67,8 +77,6 @@ namespace ResApp.Views
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", skill.ApplicantID);
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Description", skill.CategoryID);
             return View(skill);
         }
 
@@ -85,7 +93,6 @@ namespace ResApp.Views
             {
                 return NotFound();
             }
-            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", skill.ApplicantID);
             ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Description", skill.CategoryID);
             return View(skill);
         }
@@ -95,7 +102,7 @@ namespace ResApp.Views
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Description,YearsExp,Priority,ApplicantID,CategoryID")] Skill skill)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Description,YearsExp,Priority,CategoryID")] Skill skill)
         {
             if (id != skill.ID)
             {
@@ -122,8 +129,6 @@ namespace ResApp.Views
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicantID"] = new SelectList(_context.Applicants, "ID", "FullName", skill.ApplicantID);
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Description", skill.CategoryID);
             return View(skill);
         }
 
@@ -136,8 +141,6 @@ namespace ResApp.Views
             }
 
             var skill = await _context.Skills
-                .Include(s => s.Applicant)
-                .Include(s => s.Category)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (skill == null)
             {
